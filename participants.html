@@ -1,41 +1,51 @@
 <!doctype html>
 <html lang="en">
+
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Participants - Quiz App</title>
-  <link rel="stylesheet" href="styles.css">
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Participants - Quiz App</title>
+    <link rel="stylesheet" href="styles.css">
 </head>
+
 <body>
-  <div class="app">
-    <header class="header">
-      <h1>Participants</h1>
-      <div class="meta">
-        <small id="participantsCount">0</small>
-      </div>
-    </header>
+    <div class="app">
+        <header class="header">
+            <h1>Participants</h1>
+            <div class="meta">
+                <small id="participantsCount">0</small>
+            </div>
+        </header>
 
-    <main class="main card">
-      <table class="participants-table" aria-live="polite">
-        <thead>
-          <tr><th>#</th><th>Name</th><th>Score</th><th>Date</th></tr>
-        </thead>
-        <tbody id="participantsBody">
-          <tr><td colspan="4">No participants yet</td></tr>
-        </tbody>
-      </table>
+        <main class="main card">
+            <table class="participants-table" aria-live="polite">
+                <thead>
+                    <tr>
+                        <th>#</th>
+                        <th>Name</th>
+                        <th>Score</th>
+                        <th>Date</th>
+                    </tr>
+                </thead>
+                <tbody id="participantsBody">
+                    <tr>
+                        <td colspan="4">No participants yet</td>
+                    </tr>
+                </tbody>
+            </table>
 
-      <div class="controls-row">
-        <button id="backToQuiz" class="btn">Back to Quiz</button>
-        <button id="clearParticipants" class="btn">Clear All</button>
-      </div>
-    </main>
+            <div class="controls-row">
+                <button id="backToQuiz" class="btn">Back to Quiz</button>
+                <button id="clearParticipants" class="btn">Clear All</button>
+            </div>
+        </main>
 
-    <footer class="footer">
-      <small>Participants are stored locally in your browser (localStorage).</small>
-    </footer>
-  </div>
+        <footer class="footer">
+            <small>Participants are stored locally in your browser (localStorage).</small>
+        </footer>
+    </div>
 
-  <script src="participants.js" defer></script>
+    <script src="participants.js" defer></script>
 </body>
+
 </html>

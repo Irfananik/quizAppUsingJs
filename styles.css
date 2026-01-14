@@ -21,10 +21,14 @@ body {
     font-family: Inter, Segoe UI, Roboto, Arial;
     background: linear-gradient(180deg, #071021 0%, #0f1724 100%);
     color: #e6eef6;
-    display: flex;
-    align-items: center;
-    justify-content: center;
+    min-height: 100vh;
     padding: 2rem;
+    /* Use normal document flow so page elements are not all flex children */
+}
+
+/* Center the main app horizontally but allow normal vertical flow */
+.app {
+    margin: 0 auto;
 }
 
 .app {
@@ -194,6 +198,138 @@ body {
 }
 
 /* Participants page table */
-.participants-table{width:100%; border-collapse:collapse; margin-top:0.6rem}
-.participants-table th, .participants-table td{padding:0.6rem; text-align:left; border-bottom:1px solid rgba(255,255,255,0.03)}
-.controls-row{display:flex; gap:0.6rem; margin-top:0.8rem}
+.participants-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 0.6rem
+}
+
+.participants-table th,
+.participants-table td {
+    padding: 0.6rem;
+    text-align: left;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.03)
+}
+
+.controls-row {
+    display: flex;
+    gap: 0.6rem;
+    margin-top: 0.8rem
+}
+
+/* Auth improvements */
+.auth-card {
+    max-width: 520px;
+    margin: 0 auto;
+    padding: 1.4rem;
+    border-radius: 12px;
+    box-shadow: 0 10px 30px rgba(2, 6, 23, 0.6);
+}
+
+.auth-tabs {
+    display: flex;
+    gap: 0.5rem;
+    margin-bottom: 0.8rem
+}
+
+.tab-btn {
+    padding: 0.5rem 0.9rem;
+    border-radius: 8px;
+    border: 1px solid rgba(255, 255, 255, 0.03);
+    background: transparent;
+    color: var(--accent);
+    transition: all 160ms
+}
+
+.tab-btn.active,
+.tab-btn:hover {
+    background: rgba(110, 231, 183, 0.12);
+    color: #022;
+    box-shadow: 0 6px 16px rgba(110, 231, 183, 0.04);
+    border-color: rgba(110, 231, 183, 0.14)
+}
+
+.auth-desc {
+    color: var(--muted);
+    margin-bottom: 0.8rem
+}
+
+.auth-form .form-row label {
+    color: var(--muted);
+    font-size: 0.9rem
+}
+
+.auth-form input {
+    width: 100%;
+    padding: 0.5rem;
+    border-radius: 6px;
+    border: 1px solid rgba(255, 255, 255, 0.04);
+    background: transparent;
+    color: inherit
+}
+
+.btn.full {
+    width: 100%;
+    padding: 0.7rem
+}
+
+.feedback.correct {
+    color: #042;
+    background: rgba(110, 231, 183, 0.12);
+    padding: 0.5rem;
+    border-radius: 8px
+}
+
+.feedback.wrong {
+    color: var(--danger);
+    background: rgba(255, 107, 107, 0.08);
+    padding: 0.5rem;
+    border-radius: 8px
+}
+
+/* Auth page */
+.auth-card {
+    max-width: 540px;
+    margin: 0 auto
+}
+
+.auth-tabs {
+    display: flex;
+    gap: 0.5rem;
+    margin-bottom: 0.6rem
+}
+
+.auth-form .form-row {
+    display: flex;
+    flex-direction: column;
+    gap: 0.3rem;
+    margin-bottom: 0.6rem
+}
+
+.auth-form input {
+    padding: 0.5rem;
+    border-radius: 6px;
+    border: 1px solid rgba(255, 255, 255, 0.04);
+    background: transparent;
+    color: inherit
+}
+
+.user-info {
+    display: flex;
+    gap: 0.6rem;
+    align-items: center
+}
+
+.user-info #userLabel {
+    color: var(--muted);
+    font-weight: 600
+}
+
+/* Auth title centered inside card */
+.auth-title {
+    text-align: center;
+    margin: 0 0 0.8rem;
+    font-size: 1.25rem;
+    color: var(--accent);
+    font-weight: 700
+}

@@ -18,6 +18,7 @@ Notes
 - Questions are defined in `script.js` in the `questions` array.
 - Code includes comments and is intentionally modular for clarity.
 - A **Participants** page stores players' names, scores, and timestamps (accessible via the "View Participants" button).
+- Simple registration / login is provided (open `auth.html` or visit the site and sign in) — accounts are stored locally for this demo.
 
 Enhancements you can add
 - Persist high scores with localStorage (already used for participants)

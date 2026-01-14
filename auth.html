@@ -1,0 +1,51 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Login / Register - Quiz App</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+
+<body>
+    <div class="app">
+
+        <main class="main">
+            <section class="card auth-card">
+                <h1 class="auth-title">Welcome to Quiz App</h1>
+                <div class="auth-tabs" role="tablist">
+                    <button id="tabLogin" class="btn tab-btn active" role="tab" aria-selected="true">Login</button>
+                    <button id="tabRegister" class="btn tab-btn" role="tab" aria-selected="false">Register</button>
+                </div>
+
+                <p class="auth-desc">Access the quiz by creating a free account or logging in — accounts are stored locally for this demo.</p>
+
+                <form id="loginForm" class="auth-form" autocomplete="on">
+                    <h3>Login</h3>
+                    <div class="form-row"><label for="loginUsername">Username</label><input id="loginUsername" placeholder="your username" required autocomplete="username"></div>
+                    <div class="form-row"><label for="loginPassword">Password</label><input id="loginPassword" type="password" placeholder="your password" required autocomplete="current-password"></div>
+                    <div class="form-row"><button id="loginBtn" class="btn primary full">Login</button></div>
+                    <div id="loginFeedback" class="feedback"></div>
+                </form>
+
+                <form id="registerForm" class="auth-form hidden" autocomplete="on">
+                    <h3>Create Account</h3>
+                    <div class="form-row"><label for="regName">Full name</label><input id="regName" placeholder="Your full name" required autocomplete="name"></div>
+                    <div class="form-row"><label for="regUsername">Username</label><input id="regUsername" placeholder="Pick a username" required autocomplete="username"></div>
+                    <div class="form-row"><label for="regPassword">Password</label><input id="regPassword" type="password" placeholder="Choose a password" required autocomplete="new-password"></div>
+                    <div class="form-row"><button id="registerBtn" class="btn primary full">Create Account</button></div>
+                    <div id="regFeedback" class="feedback"></div>
+                </form>
+
+            </section>
+        </main>
+
+        <footer class="footer">
+            <small>Accounts are stored locally (demo only).</small>
+        </footer>
+    </div>
+    <script src="auth.js" defer></script>
+</body>
+
+</html>

@@ -13,9 +13,10 @@
         <header class="header">
             <h1>Quiz App ✅</h1>
             <div class="meta">
-                <label for="playerName">Name</label>
-                <input id="playerName" type="text" placeholder="Your name..." />
-                <div class="status">
+        <div id="userInfo" class="user-info" hidden>
+          <span id="userLabel"></span>
+          <button id="logoutBtn" class="btn">Logout</button>
+        </div>
                     <div id="timer" class="timer">--:--</div>
                     <div id="score" class="score">Score: 0</div>
                 </div>

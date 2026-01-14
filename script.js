@@ -86,6 +86,9 @@ const nextBtn = document.getElementById('nextBtn');
 const restartBtn = document.getElementById('restartBtn');
 const participantsBtn = document.getElementById('participantsBtn');
 const viewParticipantsBtn = document.getElementById('viewParticipantsBtn');
+const logoutBtn = document.getElementById('logoutBtn');
+const userInfo = document.getElementById('userInfo');
+const userLabel = document.getElementById('userLabel');
 const playerInput = document.getElementById('playerName');
 const timerEl = document.getElementById('timer');
 const scoreEl = document.getElementById('score');
@@ -104,11 +107,25 @@ const finalScore = document.getElementById('finalScore');
 // Initialization
 // -------------------------
 function init() {
+    // require signed-in user (simple client-side session)
+    const currentUser = JSON.parse(localStorage.getItem('currentUser') || 'null');
+    if (!currentUser) {
+        // Not signed in — show auth page first
+        window.location.href = 'auth.html';
+        return;
+    }
+
     totalQEl.textContent = questions.length;
     scoreEl.textContent = `Score: ${score}`;
     timerEl.textContent = `--:--`;
+
+    // prefill player name and show user info
+    if (playerInput) { playerInput.value = currentUser.name || currentUser.username || ''; playerInput.readOnly = true; }
+    if (userInfo && userLabel) { userInfo.hidden = false; userLabel.textContent = `Signed in: ${currentUser.name || currentUser.username}`; }
+
     attachEvents();
 }
+
 
 // -------------------------
 // Event listeners
@@ -121,6 +138,7 @@ function attachEvents() {
     restartBtn.addEventListener('click', resetQuiz);
     if (viewParticipantsBtn) viewParticipantsBtn.addEventListener('click', () => { window.location.href = 'participants.html'; });
     if (participantsBtn) participantsBtn.addEventListener('click', () => { window.location.href = 'participants.html'; });
+    if (logoutBtn) logoutBtn.addEventListener('click', () => { localStorage.removeItem('currentUser'); window.location.href = 'auth.html'; });
 
     // change event when selecting an option
     choicesForm.addEventListener('change', (e) => {
