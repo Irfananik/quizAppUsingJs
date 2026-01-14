@@ -274,9 +274,10 @@ function finishQuiz() {
     stopTimer();
     quizScreen.classList.add('hidden');
     endScreen.classList.remove('hidden');
-    const name = (playerInput && playerInput.value.trim()) || (playerName ? playerName : 'Anonymous');
-    saveParticipant(name, score);
-    finalMessage.innerHTML = `Nice work, ${name}!`;
+    const currentUser = JSON.parse(localStorage.getItem('currentUser') || 'null');
+    const displayName = currentUser ? (currentUser.name || currentUser.username) : ((playerInput && playerInput.value.trim()) || (playerName ? playerName : 'Anonymous'));
+    saveParticipant(score);
+    finalMessage.innerHTML = `Nice work, ${displayName}!`;
     finalScore.innerHTML = `Final score: ${score} / ${questions.length}`;
 }
 
@@ -340,10 +341,13 @@ function handleKeydown(e) {
 // Reset / restart
 // -------------------------
 
-function saveParticipant(name, scoreVal) {
+function saveParticipant(scoreVal) {
     try {
+        const currentUser = JSON.parse(localStorage.getItem('currentUser') || 'null');
+        const username = currentUser ? currentUser.username : null;
+        const displayName = currentUser ? (currentUser.name || currentUser.username) : ((playerInput && playerInput.value.trim()) || 'Anonymous');
         const list = JSON.parse(localStorage.getItem('participants') || '[]');
-        list.push({ name, score: scoreVal, date: new Date().toISOString() });
+        list.push({ name: displayName, username: username, score: scoreVal, date: new Date().toISOString() });
         localStorage.setItem('participants', JSON.stringify(list));
     } catch (err) { console.error('Failed to save participant', err); }
 }

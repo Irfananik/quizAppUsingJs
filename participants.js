@@ -14,14 +14,26 @@ function renderParticipants() {
     const body = document.getElementById('participantsBody');
     const count = document.getElementById('participantsCount');
     const raw = JSON.parse(localStorage.getItem('participants') || '[]');
-    const list = raw.slice().sort((a, b) => (b.score - a.score) || (new Date(b.date) - new Date(a.date)));
+    const users = JSON.parse(localStorage.getItem('users') || '[]');
+
+    // Enrich participant entries with displayName: prefer saved name, otherwise lookup by username
+    const enriched = raw.map(p => {
+        let displayName = p.name;
+        if ((!displayName || displayName === 'Anonymous') && p.username) {
+            const uu = users.find(u => u.username === p.username);
+            displayName = uu ? (uu.name || uu.username) : p.username;
+        }
+        return Object.assign({}, p, { displayName });
+    });
+
+    const list = enriched.slice().sort((a, b) => (b.score - a.score) || (new Date(b.date) - new Date(a.date)));
     body.innerHTML = '';
     if (list.length === 0) {
         body.innerHTML = '<tr><td colspan="4">No participants yet</td></tr>';
     } else {
         list.forEach((p, i) => {
             const tr = document.createElement('tr');
-            tr.innerHTML = `<td>${i + 1}</td><td>${escapeHtml(p.name)}</td><td>${p.score}</td><td>${new Date(p.date).toLocaleString()}</td>`;
+            tr.innerHTML = `<td>${i + 1}</td><td>${escapeHtml(p.displayName || p.name)}</td><td>${p.score}</td><td>${new Date(p.date).toLocaleString()}</td>`;
             body.appendChild(tr);
         });
     }
