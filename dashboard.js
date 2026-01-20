@@ -58,22 +58,26 @@ function renderUserScores() {
 
     // Calculate statistics
     const totalAttempts = userScores.length;
-    let averageScore = 0;
-    let bestScore = 0;
-    let lastScore = '-';
+    let averagePercent = 0;
+    let bestPercent = 0;
+    let lastPercent = '-';
 
     if (totalAttempts > 0) {
-        const sum = userScores.reduce((acc, p) => acc + p.score, 0);
-        averageScore = (sum / totalAttempts).toFixed(1);
-        bestScore = Math.max(...userScores.map(p => p.score));
-        lastScore = sorted[0].score;
+        const percents = userScores.map(p => {
+            const totalQ = Number(p.totalQuestions) || 10;
+            return Math.round((p.score / totalQ) * 100);
+        });
+        const sum = percents.reduce((acc, n) => acc + n, 0);
+        averagePercent = Math.round(sum / percents.length);
+        bestPercent = Math.max(...percents);
+        lastPercent = percents[0];
     }
 
     // Update statistics
     document.getElementById('totalAttempts').textContent = totalAttempts;
-    document.getElementById('averageScore').textContent = averageScore;
-    document.getElementById('bestScore').textContent = bestScore;
-    document.getElementById('lastScore').textContent = lastScore;
+    document.getElementById('averageScore').textContent = `${averagePercent}%`;
+    document.getElementById('bestScore').textContent = `${bestPercent}%`;
+    document.getElementById('lastScore').textContent = typeof lastPercent === 'number' ? `${lastPercent}%` : '-';
 
     // Render score history table
     const body = document.getElementById('scoresBody');
@@ -86,10 +90,11 @@ function renderUserScores() {
     } else {
         sorted.forEach((p, i) => {
             const tr = document.createElement('tr');
-            const percentage = ((p.score / 10) * 100).toFixed(0); // Assuming 10 total questions
+            const totalQ = Number(p.totalQuestions) || 10;
+            const percentage = ((p.score / totalQ) * 100).toFixed(0);
             tr.innerHTML = `
                 <td>${i + 1}</td>
-                <td>${p.score}/10</td>
+                <td>${p.score}/${totalQ}</td>
                 <td>${percentage}%</td>
                 <td>${new Date(p.date).toLocaleString()}</td>
             `;

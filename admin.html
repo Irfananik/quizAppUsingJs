@@ -1,0 +1,100 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Admin Panel - Quiz App</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+
+<body>
+    <div class="app">
+        <header class="header">
+            <h1>Admin Panel 🛠️</h1>
+            <div class="meta">
+                <div id="userInfo" class="user-info">
+                    <span id="userLabel"></span>
+                    <button id="backToQuiz" class="btn">Back to Quiz</button>
+                    <button id="dashboardLink" class="btn">My Dashboard</button>
+                    <button id="logoutBtn" class="btn">Logout</button>
+                </div>
+            </div>
+        </header>
+
+        <main class="main">
+            <section class="card">
+                <h2>Question Editor</h2>
+                <div class="admin-grid">
+                    <label class="field">
+                        <span>Question Text</span>
+                        <textarea id="qText" rows="3" placeholder="Enter question"></textarea>
+                    </label>
+                    <label class="field">
+                        <span>Category</span>
+                        <input id="qCategory" type="text" placeholder="e.g., JavaScript" />
+                    </label>
+                    <div class="field">
+                        <div class="field-row">
+                            <span>Options</span>
+                            <div class="option-actions">
+                                <button id="addOption" class="btn">+ Option</button>
+                                <button id="removeOption" class="btn">- Option</button>
+                            </div>
+                        </div>
+                        <div id="optionsContainer" class="options-container"></div>
+                    </div>
+                    <label class="field">
+                        <span>Correct Answer</span>
+                        <select id="qAnswer"></select>
+                    </label>
+                    <div class="field actions-row">
+                        <button id="saveQuestion" class="btn primary">Save Question</button>
+                        <button id="cancelEdit" class="btn">Clear</button>
+                        <span id="editHint" class="muted"></span>
+                    </div>
+                </div>
+            </section>
+
+            <section class="card">
+                <h2>Import / Export</h2>
+                <div class="controls-row">
+                    <input id="importFile" type="file" accept="application/json" />
+                    <button id="importBtn" class="btn">Import JSON</button>
+                    <button id="exportBtn" class="btn">Export JSON</button>
+                    <button id="resetToDefaults" class="btn">Restore Defaults</button>
+                </div>
+                <p class="muted">JSON schema: [{ id, text, choices: string[], answer: indexNumber, category }]</p>
+            </section>
+
+            <section class="card">
+                <div class="controls-row" style="justify-content: space-between; align-items: center;">
+                    <h2 style="margin:0;">Question Bank</h2>
+                    <span id="questionCount" class="muted"></span>
+                </div>
+                <div class="table-wrapper">
+                    <table class="participants-table">
+                        <thead>
+                            <tr>
+                                <th>#</th>
+                                <th>Category</th>
+                                <th>Question</th>
+                                <th>Answer</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody id="questionBody"></tbody>
+                    </table>
+                </div>
+            </section>
+        </main>
+
+        <footer class="footer">
+            <small>Admin tools: manage question bank with categories, import/export JSON</small>
+        </footer>
+    </div>
+
+    <script src="admin.js" defer></script>
+</body>
+
+</html>

@@ -13,70 +13,88 @@ function isAdmin() {
 }
 
 // -------------------------
-// Data: questions array
+// Data: question bank (with categories) loaded from localStorage
 // -------------------------
-const questions = [
+const defaultQuestions = [
     {
         id: 1,
         text: "Which language is primarily used for web page structure?",
         choices: ["CSS", "Python", "HTML", "SQL"],
-        answer: 2 // index (0-based): HTML
+        answer: 2,
+        category: "HTML"
     },
     {
         id: 2,
         text: "JavaScript is used for:",
         choices: ["Styling only", "Client-side interactivity", "Database", "Operating system"],
-        answer: 1
+        answer: 1,
+        category: "JavaScript"
     },
     {
         id: 3,
         text: "True or False: CSS stands for Cascading Style Sheets.",
         choices: ["True", "False"],
-        answer: 0
+        answer: 0,
+        category: "CSS"
     },
     {
         id: 4,
         text: "Which HTML tag is used for images?",
         choices: ["<img>", "<image>", "<pic>", "<src>"],
-        answer: 0
+        answer: 0,
+        category: "HTML"
     },
     {
         id: 5,
         text: "What does DOM stand for?",
         choices: ["Document Object Model", "Data Object Model", "Digital Object Model", "Document Order Map"],
-        answer: 0
+        answer: 0,
+        category: "JavaScript"
     },
     {
         id: 6,
         text: "Which method adds a new element to an array?",
         choices: ["pop()", "push()", "shift()", "slice()"],
-        answer: 1
+        answer: 1,
+        category: "JavaScript"
     },
     {
         id: 7,
         text: "True or False: The 'querySelector' returns all matching elements.",
         choices: ["True", "False"],
-        answer: 1
+        answer: 1,
+        category: "JavaScript"
     },
     {
         id: 8,
         text: "Which operator is used for strict equality in JavaScript?",
         choices: ["=", "==", "===", "!=="],
-        answer: 2
+        answer: 2,
+        category: "JavaScript"
     },
     {
         id: 9,
         text: "True or False: HTML element IDs should be unique on a page.",
         choices: ["True", "False"],
-        answer: 0
+        answer: 0,
+        category: "HTML"
     },
     {
         id: 10,
         text: "Which method converts a JSON string to a JavaScript object?",
         choices: ["JSON.stringify()", "JSON.parse()", "JSON.toObject()", "JSON.from()"],
-        answer: 1
+        answer: 1,
+        category: "JavaScript"
     }
 ];
+
+function loadQuestionBank() {
+    const stored = JSON.parse(localStorage.getItem('questionBank') || 'null');
+    if (Array.isArray(stored)) return stored;
+    return defaultQuestions;
+}
+
+let questions = loadQuestionBank();
 
 // -------------------------
 // App state
@@ -87,6 +105,12 @@ let timerInterval = null;
 let timeLeft = 20; // seconds per question
 let playerName = '';
 let answered = false;
+
+function refreshQuestionBank() {
+    questions = loadQuestionBank();
+    if (totalQEl) totalQEl.textContent = questions.length;
+    if (startBtn) startBtn.disabled = questions.length === 0;
+}
 
 // -------------------------
 // DOM references
@@ -99,6 +123,7 @@ const restartBtn = document.getElementById('restartBtn');
 const restartQuizBtn = document.getElementById('restartQuizBtn');
 const dashboardBtn = document.getElementById('dashboardBtn');
 const viewParticipantsBtn = document.getElementById('viewParticipantsBtn');
+const adminBtn = document.getElementById('adminBtn');
 const logoutBtn = document.getElementById('logoutBtn');
 const userInfo = document.getElementById('userInfo');
 const userLabel = document.getElementById('userLabel');
@@ -128,15 +153,16 @@ function init() {
         return;
     }
 
-    totalQEl.textContent = questions.length;
+    refreshQuestionBank();
     scoreEl.textContent = `Score: ${score}`;
     timerEl.textContent = `--:--`;
 
     // Show/hide features based on role
     if (!isAdmin()) {
-        // Hide view participants button for normal users
         if (viewParticipantsBtn) viewParticipantsBtn.style.display = 'none';
+        if (adminBtn) adminBtn.style.display = 'none';
     }
+    if (isAdmin() && adminBtn) adminBtn.style.display = 'inline-block';
 
     // prefill player name and show user info
     if (playerInput) { playerInput.value = currentUser.name || currentUser.username || ''; playerInput.readOnly = true; }
@@ -162,6 +188,7 @@ function attachEvents() {
     if (restartQuizBtn) restartQuizBtn.addEventListener('click', resetQuiz);
     if (viewParticipantsBtn) viewParticipantsBtn.addEventListener('click', () => { window.location.href = isAdmin() ? 'participants.html' : 'dashboard.html'; });
     if (dashboardBtn) dashboardBtn.addEventListener('click', () => { window.location.href = 'dashboard.html'; });
+    if (adminBtn) adminBtn.addEventListener('click', () => { window.location.href = 'admin.html'; });
     if (logoutBtn) logoutBtn.addEventListener('click', () => { localStorage.removeItem('currentUser'); window.location.href = 'auth.html'; });
 
     // change event when selecting an option
@@ -181,6 +208,11 @@ function attachEvents() {
 // Start quiz
 // -------------------------
 function startQuiz() {
+    refreshQuestionBank();
+    if (!questions.length) {
+        alert('No questions available. Admin needs to add questions first.');
+        return;
+    }
     currentIndex = 0; score = 0; answered = false;
     startScreen.classList.add('hidden');
     endScreen.classList.add('hidden');
@@ -194,6 +226,7 @@ function startQuiz() {
 // -------------------------
 function updateQuestion() {
     const q = questions[currentIndex];
+    if (!q) { finishQuiz(); return; }
     qIndexEl.textContent = currentIndex + 1;
     questionTextEl.innerHTML = q.text;
 
@@ -376,7 +409,7 @@ function saveParticipant(scoreVal) {
         const username = currentUser ? currentUser.username : null;
         const displayName = currentUser ? (currentUser.name || currentUser.username) : ((playerInput && playerInput.value.trim()) || 'Anonymous');
         const list = JSON.parse(localStorage.getItem('participants') || '[]');
-        list.push({ name: displayName, username: username, score: scoreVal, date: new Date().toISOString() });
+        list.push({ name: displayName, username: username, score: scoreVal, totalQuestions: questions.length, date: new Date().toISOString() });
         localStorage.setItem('participants', JSON.stringify(list));
     } catch (err) { console.error('Failed to save participant', err); }
 }

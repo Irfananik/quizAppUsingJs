@@ -402,3 +402,64 @@ body {
     font-size: 0.9rem;
     margin: 0.3rem 0
 }
+
+/* Admin panel */
+.admin-grid {
+    display: grid;
+    gap: 0.8rem;
+}
+
+.field {
+    display: flex;
+    flex-direction: column;
+    gap: 0.35rem;
+}
+
+.field span {
+    color: var(--muted);
+    font-weight: 600;
+}
+
+.field textarea,
+.field input,
+.field select {
+    padding: 0.6rem;
+    border-radius: 8px;
+    border: 1px solid rgba(255, 255, 255, 0.06);
+    background: rgba(255, 255, 255, 0.02);
+    color: inherit;
+}
+
+.field-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.option-actions {
+    display: flex;
+    gap: 0.4rem;
+}
+
+.options-container {
+    display: flex;
+    flex-direction: column;
+    gap: 0.4rem;
+}
+
+.option-row {
+    display: grid;
+    grid-template-columns: 32px 1fr;
+    gap: 0.4rem;
+    align-items: center;
+}
+
+.option-row input {
+    width: 100%;
+}
+
+.actions-row {
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
+}
