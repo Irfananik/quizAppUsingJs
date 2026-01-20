@@ -333,3 +333,72 @@ body {
     color: var(--accent);
     font-weight: 700
 }
+
+/* Dashboard styles */
+.profile-details {
+    display: flex;
+    flex-direction: column;
+    gap: 0.8rem;
+    margin-top: 0.6rem
+}
+
+.detail-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0.5rem 0;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.03)
+}
+
+.detail-row:last-child {
+    border-bottom: none
+}
+
+.detail-label {
+    color: var(--muted);
+    font-weight: 600;
+    font-size: 0.9rem
+}
+
+.detail-value {
+    color: var(--accent);
+    font-weight: 600
+}
+
+.stats-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+    gap: 0.8rem;
+    margin-top: 0.6rem
+}
+
+.stat-card {
+    background: rgba(255, 255, 255, 0.02);
+    padding: 1rem;
+    border-radius: 8px;
+    text-align: center;
+    border: 1px solid rgba(255, 255, 255, 0.03)
+}
+
+.stat-value {
+    font-size: 2rem;
+    font-weight: 700;
+    color: var(--accent);
+    margin-bottom: 0.3rem
+}
+
+.stat-label {
+    color: var(--muted);
+    font-size: 0.85rem
+}
+
+.table-wrapper {
+    overflow-x: auto;
+    margin-top: 0.6rem
+}
+
+.muted {
+    color: var(--muted);
+    font-size: 0.9rem;
+    margin: 0.3rem 0
+}

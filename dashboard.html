@@ -1,0 +1,107 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>My Dashboard - Quiz App</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+
+<body>
+    <div class="app">
+        <header class="header">
+            <h1>My Dashboard 📊</h1>
+            <div class="meta">
+                <div id="userInfo" class="user-info">
+                    <span id="userLabel"></span>
+                    <button id="logoutBtn" class="btn">Logout</button>
+                </div>
+            </div>
+        </header>
+
+        <main class="main">
+            <!-- User Details Card -->
+            <section class="card">
+                <h2>Profile Information</h2>
+                <div class="profile-details">
+                    <div class="detail-row">
+                        <span class="detail-label">Name:</span>
+                        <span id="userName" class="detail-value"></span>
+                    </div>
+                    <div class="detail-row">
+                        <span class="detail-label">Username:</span>
+                        <span id="userUsername" class="detail-value"></span>
+                    </div>
+                    <div class="detail-row">
+                        <span class="detail-label">Role:</span>
+                        <span id="userRole" class="detail-value"></span>
+                    </div>
+                    <div class="detail-row">
+                        <span class="detail-label">Member Since:</span>
+                        <span id="userCreatedAt" class="detail-value"></span>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Quiz Statistics Card -->
+            <section class="card">
+                <h2>Quiz Statistics</h2>
+                <div class="stats-grid">
+                    <div class="stat-card">
+                        <div class="stat-value" id="totalAttempts">0</div>
+                        <div class="stat-label">Total Attempts</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-value" id="averageScore">0</div>
+                        <div class="stat-label">Average Score</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-value" id="bestScore">0</div>
+                        <div class="stat-label">Best Score</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-value" id="lastScore">-</div>
+                        <div class="stat-label">Last Score</div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Score History Card -->
+            <section class="card">
+                <h2>Score History</h2>
+                <p id="scoresCount" class="muted"></p>
+                <div class="table-wrapper">
+                    <table class="participants-table">
+                        <thead>
+                            <tr>
+                                <th>#</th>
+                                <th>Score</th>
+                                <th>Percentage</th>
+                                <th>Date & Time</th>
+                            </tr>
+                        </thead>
+                        <tbody id="scoresBody">
+                        </tbody>
+                    </table>
+                </div>
+            </section>
+
+            <!-- Actions -->
+            <section class="card">
+                <div class="controls-row">
+                    <button id="backToQuiz" class="btn primary">Take Quiz Again</button>
+                    <button id="viewAllParticipants" class="btn" style="display: none;">View All Participants</button>
+                </div>
+            </section>
+        </main>
+
+        <footer class="footer">
+            <small>Your personal quiz dashboard • Track your progress</small>
+        </footer>
+    </div>
+
+    <script src="dashboard.js" defer></script>
+</body>
+
+</html>

@@ -1,6 +1,18 @@
 // Quiz App - script.js
 
 // -------------------------
+// Role-based access helpers
+// -------------------------
+function getCurrentUser() {
+    return JSON.parse(localStorage.getItem('currentUser') || 'null');
+}
+
+function isAdmin() {
+    const user = getCurrentUser();
+    return user && user.role === 'admin';
+}
+
+// -------------------------
 // Data: questions array
 // -------------------------
 const questions = [
@@ -84,7 +96,8 @@ const resetBtn = document.getElementById('resetBtn');
 const submitBtn = document.getElementById('submitBtn');
 const nextBtn = document.getElementById('nextBtn');
 const restartBtn = document.getElementById('restartBtn');
-const participantsBtn = document.getElementById('participantsBtn');
+const restartQuizBtn = document.getElementById('restartQuizBtn');
+const dashboardBtn = document.getElementById('dashboardBtn');
 const viewParticipantsBtn = document.getElementById('viewParticipantsBtn');
 const logoutBtn = document.getElementById('logoutBtn');
 const userInfo = document.getElementById('userInfo');
@@ -119,9 +132,19 @@ function init() {
     scoreEl.textContent = `Score: ${score}`;
     timerEl.textContent = `--:--`;
 
+    // Show/hide features based on role
+    if (!isAdmin()) {
+        // Hide view participants button for normal users
+        if (viewParticipantsBtn) viewParticipantsBtn.style.display = 'none';
+    }
+
     // prefill player name and show user info
     if (playerInput) { playerInput.value = currentUser.name || currentUser.username || ''; playerInput.readOnly = true; }
-    if (userInfo && userLabel) { userInfo.hidden = false; userLabel.textContent = `Signed in: ${currentUser.name || currentUser.username}`; }
+    if (userInfo && userLabel) { 
+        userInfo.hidden = false; 
+        const roleLabel = isAdmin() ? ' [Admin]' : '';
+        userLabel.textContent = `Signed in: ${currentUser.name || currentUser.username}${roleLabel}`; 
+    }
 
     attachEvents();
 }
@@ -136,8 +159,9 @@ function attachEvents() {
     submitBtn.addEventListener('click', submitAnswer);
     nextBtn.addEventListener('click', nextQuestion);
     restartBtn.addEventListener('click', resetQuiz);
-    if (viewParticipantsBtn) viewParticipantsBtn.addEventListener('click', () => { window.location.href = 'participants.html'; });
-    if (participantsBtn) participantsBtn.addEventListener('click', () => { window.location.href = 'participants.html'; });
+    if (restartQuizBtn) restartQuizBtn.addEventListener('click', resetQuiz);
+    if (viewParticipantsBtn) viewParticipantsBtn.addEventListener('click', () => { window.location.href = isAdmin() ? 'participants.html' : 'dashboard.html'; });
+    if (dashboardBtn) dashboardBtn.addEventListener('click', () => { window.location.href = 'dashboard.html'; });
     if (logoutBtn) logoutBtn.addEventListener('click', () => { localStorage.removeItem('currentUser'); window.location.href = 'auth.html'; });
 
     // change event when selecting an option
@@ -334,6 +358,11 @@ function handleKeydown(e) {
     if (e.key === 'Enter') {
         if (!submitBtn.disabled) { submitAnswer(); }
         else if (!nextBtn.disabled) { nextQuestion(); }
+    }
+
+    // R to restart
+    if ((e.key || '').toLowerCase() === 'r') {
+        resetQuiz();
     }
 }
 

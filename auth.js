@@ -8,7 +8,26 @@ function saveUsers(list) { localStorage.setItem('users', JSON.stringify(list)); 
 
 function showFeedback(el, msg, isError = true) { el.innerHTML = msg; el.classList.toggle('wrong', isError); el.classList.toggle('correct', !isError); }
 
+// Initialize default admin account
+function initializeAdmin() {
+    const users = getUsers();
+    if (!users.find(u => u.username === 'admin')) {
+        users.push({
+            username: 'admin',
+            password: 'admin123',
+            name: 'Administrator',
+            role: 'admin',
+            createdAt: new Date().toISOString()
+        });
+        saveUsers(users);
+        console.log('Default admin account created (username: admin, password: admin123)');
+    }
+}
+
 document.addEventListener('DOMContentLoaded', () => {
+    // Initialize admin account
+    initializeAdmin();
+    
     // If already signed in, go to quiz
     if (localStorage.getItem('currentUser')) { window.location.href = 'index.html'; return; }
     const tabLogin = document.getElementById('tabLogin');
@@ -50,10 +69,10 @@ document.addEventListener('DOMContentLoaded', () => {
         if (!name || !username || !password) { showFeedback(regFeedback, 'Please fill all fields'); return; }
         const users = getUsers();
         if (users.find(u => u.username === username)) { showFeedback(regFeedback, 'Username already exists'); return; }
-        users.push({ username, password, name, createdAt: new Date().toISOString() });
+        users.push({ username, password, name, role: 'user', createdAt: new Date().toISOString() });
         saveUsers(users);
         showFeedback(regFeedback, 'Account created — signing in...', false);
-        setTimeout(()=>{ localStorage.setItem('currentUser', JSON.stringify({ username, name })); window.location.href = 'index.html'; }, 700);
+        setTimeout(()=>{ localStorage.setItem('currentUser', JSON.stringify({ username, name, role: 'user' })); window.location.href = 'index.html'; }, 700);
     });
 
     loginBtn.addEventListener('click', (e) => {
@@ -64,8 +83,9 @@ document.addEventListener('DOMContentLoaded', () => {
         const users = getUsers();
         const u = users.find(x => x.username === username && x.password === password);
         if (!u) { showFeedback(loginFeedback, 'Invalid username or password'); return; }
-        showFeedback(loginFeedback, `Welcome back, ${u.name.split(' ')[0]}! Redirecting...`, false);
-        setTimeout(()=>{ localStorage.setItem('currentUser', JSON.stringify({ username: u.username, name: u.name })); window.location.href = 'index.html'; }, 600);
+        const roleLabel = u.role === 'admin' ? ' (Admin)' : '';
+        showFeedback(loginFeedback, `Welcome back, ${u.name.split(' ')[0]}${roleLabel}! Redirecting...`, false);
+        setTimeout(()=>{ localStorage.setItem('currentUser', JSON.stringify({ username: u.username, name: u.name, role: u.role || 'user' })); window.location.href = 'index.html'; }, 600);
     });
 
     // default to login
