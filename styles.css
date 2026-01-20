@@ -205,9 +205,28 @@ body {
 }
 
 .footer {
-    margin-top: 1rem;
+    margin-top: 2rem;
+    padding: 1.5rem 0;
     text-align: center;
-    color: var(--muted)
+    color: var(--muted);
+    border-top: 1px solid rgba(255, 255, 255, 0.05);
+    font-size: 0.85rem;
+    font-weight: 500;
+}
+
+[data-theme="light"] .footer {
+    border-top: 1px solid #e2e8f0;
+}
+
+.footer small {
+    display: block;
+    line-height: 1.6;
+}
+
+.footer small:before {
+    content: "© 2026 Quiz App • ";
+    color: var(--accent);
+    font-weight: 600;
 }
 
 @media (max-width:520px) {
@@ -901,7 +920,12 @@ body {
     /* Footer */
     .footer {
         font-size: 0.8rem;
-        margin-top: 0.8rem;
+        margin-top: 1rem;
+        padding: 1rem 0;
+    }
+
+    .footer small {
+        font-size: 0.8rem;
     }
 }
 
@@ -1101,6 +1125,12 @@ body {
     .participants-table th,
     .participants-table td {
         padding: 0.3rem;
+    }
+
+    .footer {
+        margin-top: 0.8rem;
+        padding: 0.8rem 0;
+        font-size: 0.75rem;
     }
 }
 
