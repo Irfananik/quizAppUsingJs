@@ -25,4 +25,5 @@ Enhancements you can add
 - Add images for questions
 - Use fetch() to load questions from a JSON file or API
 
-Enjoy and modify as needed!
+Live Demo
+- https://quizappw3.netlify.app/index.html
