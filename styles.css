@@ -28,7 +28,8 @@
 
 html,
 body {
-    height: 100%
+    height: 100%;
+    overflow-x: hidden;
 }
 
 body {
@@ -39,16 +40,16 @@ body {
     min-height: 100vh;
     padding: 2rem;
     /* Use normal document flow so page elements are not all flex children */
+    width: 100%;
+    overflow-x: hidden;
 }
 
 /* Center the main app horizontally but allow normal vertical flow */
 .app {
     margin: 0 auto;
-}
-
-.app {
     width: 100%;
-    max-width: 900px
+    max-width: 900px;
+    overflow-x: hidden;
 }
 
 .header {
@@ -104,6 +105,8 @@ body {
     border-radius: 12px;
     box-shadow: 0 6px 18px rgba(2, 6, 23, 0.3);
     border: 1px solid var(--glass);
+    overflow-x: hidden;
+    overflow-y: auto;
 }
 
 [data-theme="light"] .card {
@@ -117,7 +120,8 @@ body {
 
 .main {
     display: grid;
-    gap: 1rem
+    gap: 1rem;
+    overflow-x: hidden;
 }
 
 #questionCard {
@@ -437,7 +441,10 @@ body {
 
 .table-wrapper {
     overflow-x: auto;
-    margin-top: 0.6rem
+    margin-top: 0.6rem;
+    -webkit-overflow-scrolling: touch;
+    max-width: 100%;
+    width: 100%;
 }
 
 .muted {
@@ -539,4 +546,963 @@ body {
     display: flex;
     align-items: center;
     gap: 0.6rem;
+}
+
+/* ===== RESPONSIVE DESIGN ===== */
+
+/* Large desktop (1024px+) - Baseline styles above handle this */
+
+/* Tablet and medium screens (768px - 1024px) */
+@media (max-width: 1024px) {
+    body {
+        padding: 1.5rem;
+    }
+
+    .app {
+        max-width: 100%;
+    }
+
+    .header {
+        flex-direction: column;
+        gap: 0.8rem;
+    }
+
+    .header h1 {
+        text-align: center;
+    }
+
+    .meta {
+        width: 100%;
+        justify-content: center;
+        flex-wrap: wrap;
+        gap: 0.6rem;
+    }
+
+    .stats-grid {
+        grid-template-columns: repeat(auto-fit, minmax(130px, 1fr));
+        gap: 0.8rem;
+    }
+}
+
+/* Mobile and tablet (768px and below) */
+@media (max-width: 768px) {
+    body {
+        padding: 1rem;
+        overflow-x: hidden;
+    }
+
+    .app {
+        max-width: 100%;
+        overflow-x: hidden;
+    }
+
+    .container {
+        max-width: 100%;
+        overflow-x: hidden;
+    }
+
+    .header {
+        flex-direction: column;
+        gap: 0.8rem;
+        margin-bottom: 1rem;
+    }
+
+    .header h1 {
+        font-size: 1.4rem;
+        text-align: center;
+        margin: 0;
+    }
+
+    .meta {
+        width: 100%;
+        flex-direction: column;
+        justify-content: center;
+        gap: 0.6rem;
+    }
+
+    .user-info {
+        width: 100%;
+        flex-direction: column;
+        align-items: center;
+        gap: 0.5rem;
+    }
+
+    .user-info button {
+        width: 100%;
+    }
+
+    .theme-toggle {
+        align-self: center;
+    }
+
+    .main {
+        gap: 0.8rem;
+    }
+
+    /* Cards */
+    .card {
+        padding: 1rem;
+        border-radius: 10px;
+    }
+
+    /* Controls */
+    .controls {
+        flex-direction: column;
+        gap: 0.6rem;
+    }
+
+    .controls-row {
+        flex-direction: column;
+        gap: 0.6rem;
+    }
+
+    .btn {
+        width: 100%;
+        padding: 0.7rem 1rem;
+        font-size: 0.95rem;
+        min-height: 40px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+    /* Progress */
+    .progress {
+        font-size: 0.9rem;
+        text-align: center;
+    }
+
+    /* Question card */
+    #questionCard {
+        padding: 1rem;
+    }
+
+    #questionText {
+        font-size: 1.1rem;
+        margin-bottom: 1rem;
+    }
+
+    .choice {
+        padding: 0.8rem;
+        font-size: 0.95rem;
+        min-height: 44px;
+    }
+
+    .option-row {
+        grid-template-columns: 28px 1fr;
+        gap: 0.6rem;
+    }
+
+    /* Tables - Make responsive */
+    .table-wrapper {
+        overflow-x: auto;
+        -webkit-overflow-scrolling: touch;
+        border-radius: 8px;
+    }
+
+    .participants-table {
+        font-size: 0.85rem;
+        min-width: 500px;
+    }
+
+    .participants-table th,
+    .participants-table td {
+        padding: 0.6rem;
+        word-break: break-word;
+    }
+
+    /* Admin forms */
+    .admin-grid {
+        gap: 0.8rem;
+    }
+
+    .admin-section {
+        gap: 0.8rem;
+    }
+
+    .field {
+        gap: 0.3rem;
+    }
+
+    .field label {
+        font-size: 0.95rem;
+    }
+
+    .field span {
+        font-size: 0.85rem;
+    }
+
+    .field textarea,
+    .field input,
+    .field select {
+        padding: 0.6rem;
+        font-size: 1rem; /* Prevent zoom on iOS */
+        min-height: 40px;
+    }
+
+    .field textarea {
+        min-height: 80px;
+    }
+
+    .field-row {
+        flex-direction: column;
+        gap: 0.6rem;
+    }
+
+    .option-actions {
+        width: 100%;
+        gap: 0.4rem;
+        flex-wrap: wrap;
+    }
+
+    .option-actions button {
+        flex: 1;
+        min-width: 80px;
+        padding: 0.5rem;
+        font-size: 0.85rem;
+    }
+
+    .actions-row {
+        flex-direction: column;
+        gap: 0.6rem;
+    }
+
+    .actions-row button {
+        width: 100%;
+    }
+
+    /* Stats */
+    .stats-grid {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 0.8rem;
+    }
+
+    .stat-card {
+        padding: 0.9rem;
+    }
+
+    .stat-value {
+        font-size: 1.6rem;
+    }
+
+    .stat-label {
+        font-size: 0.8rem;
+    }
+
+    /* Profile */
+    .profile-card {
+        padding: 1rem;
+    }
+
+    .profile-details {
+        gap: 0.8rem;
+    }
+
+    .detail-row {
+        padding: 0.5rem 0;
+        border-bottom: 1px solid var(--muted);
+        flex-direction: row;
+        align-items: flex-start;
+        gap: 0.5rem;
+    }
+
+    .detail-label {
+        min-width: 100px;
+        font-weight: 600;
+        font-size: 0.9rem;
+    }
+
+    .detail-value {
+        flex: 1;
+        word-break: break-word;
+        font-size: 0.9rem;
+    }
+
+    /* Score history table */
+    .score-history {
+        font-size: 0.85rem;
+        min-width: 100%;
+    }
+
+    .score-history th,
+    .score-history td {
+        padding: 0.5rem;
+    }
+
+    /* Auth */
+    .auth-card {
+        max-width: 100%;
+        padding: 1rem;
+        width: 100%;
+    }
+
+    .auth-tabs {
+        gap: 0.4rem;
+        margin-bottom: 1rem;
+    }
+
+    .tab-btn {
+        flex: 1;
+        padding: 0.6rem 0.8rem;
+        font-size: 0.9rem;
+    }
+
+    .auth-form {
+        gap: 0.8rem;
+    }
+
+    .auth-form input {
+        font-size: 1rem; /* Prevent zoom on iOS */
+        padding: 0.6rem;
+        min-height: 40px;
+    }
+
+    .form-row {
+        margin-bottom: 0.6rem;
+    }
+
+    .form-row label {
+        font-size: 0.9rem;
+    }
+
+    .form-row input {
+        min-height: 40px;
+    }
+
+    /* Theme toggle */
+    .theme-toggle {
+        padding: 0.5rem 0.7rem;
+        font-size: 1.1rem;
+        min-height: 40px;
+        min-width: 40px;
+    }
+
+    /* Timer and score display */
+    .timer,
+    .score {
+        padding: 0.3rem 0.6rem;
+        font-size: 0.9rem;
+    }
+
+    /* End screen */
+    .end-screen {
+        gap: 0.8rem;
+    }
+
+    .result-message {
+        font-size: 1.2rem;
+    }
+
+    .result-details {
+        gap: 0.5rem;
+        font-size: 0.95rem;
+    }
+
+    /* Footer */
+    .footer {
+        font-size: 0.8rem;
+        margin-top: 0.8rem;
+    }
+}
+
+/* Small phones (480px and below) */
+@media (max-width: 480px) {
+    body {
+        padding: 0.75rem;
+        overflow-x: hidden;
+    }
+
+    .app {
+        margin: 0;
+        padding: 0;
+        overflow-x: hidden;
+    }
+
+    .header {
+        gap: 0.6rem;
+        padding: 0.75rem 0;
+    }
+
+    .header h1 {
+        font-size: 1.1rem;
+        margin: 0;
+    }
+
+    .meta {
+        gap: 0.4rem;
+        font-size: 0.85rem;
+    }
+
+    .user-info {
+        gap: 0.4rem;
+    }
+
+    .user-info span {
+        font-size: 0.8rem;
+    }
+
+    .user-info button {
+        padding: 0.5rem 0.8rem;
+        font-size: 0.85rem;
+    }
+
+    .card {
+        padding: 0.8rem;
+        border-radius: 8px;
+    }
+
+    #questionText {
+        font-size: 1rem;
+        margin-bottom: 0.8rem;
+    }
+
+    .choice {
+        padding: 0.6rem 0.7rem;
+        font-size: 0.9rem;
+        gap: 0.5rem;
+    }
+
+    .option-row {
+        grid-template-columns: 24px 1fr;
+        gap: 0.4rem;
+    }
+
+    .btn {
+        padding: 0.6rem 0.8rem;
+        font-size: 0.9rem;
+        min-height: 40px;
+    }
+
+    .controls {
+        gap: 0.5rem;
+    }
+
+    .controls-row {
+        gap: 0.5rem;
+    }
+
+    /* Stats on extra small screens */
+    .stats-grid {
+        grid-template-columns: 1fr;
+        gap: 0.6rem;
+    }
+
+    .stat-card {
+        padding: 0.75rem;
+    }
+
+    .stat-value {
+        font-size: 1.4rem;
+    }
+
+    .stat-label {
+        font-size: 0.75rem;
+    }
+
+    /* Tables */
+    .participants-table {
+        font-size: 0.75rem;
+        min-width: 100%;
+    }
+
+    .participants-table th,
+    .participants-table td {
+        padding: 0.4rem;
+    }
+
+    .score-history {
+        font-size: 0.75rem;
+    }
+
+    .score-history th,
+    .score-history td {
+        padding: 0.4rem;
+    }
+
+    /* Admin forms */
+    .field textarea,
+    .field input,
+    .field select {
+        padding: 0.5rem;
+        font-size: 1rem;
+    }
+
+    .field textarea {
+        min-height: 70px;
+    }
+
+    .option-actions button {
+        padding: 0.4rem;
+        font-size: 0.8rem;
+        min-width: 60px;
+    }
+
+    .theme-toggle {
+        padding: 0.4rem 0.6rem;
+        font-size: 1rem;
+    }
+
+    .result-message {
+        font-size: 1.1rem;
+    }
+
+    .result-details {
+        font-size: 0.9rem;
+    }
+
+    /* Ensure single column layout */
+    .field-row {
+        flex-direction: column;
+        gap: 0.5rem;
+    }
+
+    .actions-row {
+        flex-direction: column;
+        gap: 0.5rem;
+    }
+}
+
+/* Extra small phones (320px and below) */
+@media (max-width: 380px) {
+    .header h1 {
+        font-size: 1rem;
+    }
+
+    .meta {
+        font-size: 0.75rem;
+    }
+
+    .card {
+        padding: 0.6rem;
+    }
+
+    #questionText {
+        font-size: 0.95rem;
+    }
+
+    .choice {
+        padding: 0.5rem 0.6rem;
+        font-size: 0.85rem;
+    }
+
+    .btn {
+        padding: 0.5rem 0.7rem;
+        font-size: 0.85rem;
+    }
+
+    .stat-value {
+        font-size: 1.3rem;
+    }
+
+    .participants-table {
+        font-size: 0.7rem;
+    }
+
+    .participants-table th,
+    .participants-table td {
+        padding: 0.3rem;
+    }
+}
+
+/* Touch device optimizations - ensure minimum touch targets */
+@media (hover: none) and (pointer: coarse) {
+    .btn {
+        min-height: 44px;
+        padding: 0.7rem 1rem;
+    }
+
+    .choice {
+        min-height: 44px;
+        padding: 0.8rem 0.7rem;
+    }
+
+    .theme-toggle {
+        min-height: 44px;
+        min-width: 44px;
+    }
+
+    input,
+    textarea,
+    select,
+    button {
+        min-height: 44px;
+    }
+
+    /* Larger tap targets */
+    .tab-btn {
+        padding: 0.8rem 1rem;
+    }
+
+    .option-actions button {
+        min-height: 40px;
+    }
+}
+
+/* Landscape orientation on mobile */
+@media (max-width: 768px) and (orientation: landscape) {
+    body {
+        padding: 0.75rem;
+    }
+
+    .header h1 {
+        font-size: 1rem;
+        margin-bottom: 0.25rem;
+    }
+
+    .card {
+        padding: 0.6rem;
+    }
+
+    #questionCard {
+        padding: 0.6rem;
+    }
+
+    #questionText {
+        font-size: 0.95rem;
+        margin-bottom: 0.6rem;
+    }
+
+    .choice {
+        padding: 0.5rem;
+        font-size: 0.85rem;
+    }
+
+    .stats-grid {
+        grid-template-columns: repeat(4, 1fr);
+    }
+
+    .stat-card {
+        padding: 0.6rem;
+    }
+
+    .stat-value {
+        font-size: 1.2rem;
+    }
+
+    .stat-label {
+        font-size: 0.7rem;
+    }
+}
+
+/* Additional admin panel mobile improvements */
+@media (max-width: 768px) {
+    /* Question table - hide category on extra small, truncate text */
+    .participants-table td:nth-child(2) {
+        max-width: 80px;
+        overflow: hidden;
+        text-overflow: ellipsis;
+    }
+
+    .participants-table td:nth-child(3) {
+        max-width: 150px;
+        overflow: hidden;
+        text-overflow: ellipsis;
+    }
+
+    /* User table - optimize column widths */
+    .participants-table td:nth-child(2),
+    .participants-table td:nth-child(3) {
+        max-width: 100px;
+        overflow: hidden;
+        text-overflow: ellipsis;
+    }
+
+    .participants-table td:nth-child(6) {
+        max-width: 120px;
+        overflow: hidden;
+        text-overflow: ellipsis;
+    }
+
+    /* Leaderboard table */
+    #leaderboardBody tr td:nth-child(2),
+    #leaderboardBody tr td:nth-child(3) {
+        max-width: 120px;
+        overflow: hidden;
+        text-overflow: ellipsis;
+    }
+
+    /* Make question input area more compact */
+    #qText {
+        min-height: 80px;
+        max-height: 120px;
+    }
+
+    /* Settings form - improve layout */
+    [style*="field-row"] {
+        flex-direction: column !important;
+    }
+
+    /* Import file input - full width */
+    input[type="file"] {
+        width: 100%;
+        padding: 0.5rem;
+        font-size: 0.9rem;
+    }
+}
+
+@media (max-width: 480px) {
+    /* Extra small tables - more aggressive truncation */
+    .participants-table td {
+        max-width: 90px;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+    }
+
+    /* Ensure action buttons are clickable */
+    .action-btn {
+        min-height: 36px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+    /* Reduce padding in tight spaces */
+    .table-wrapper {
+        margin-top: 0.4rem;
+    }
+
+    .card {
+        margin-bottom: 0.8rem;
+    }
+
+    /* Admin section cards - tighter spacing */
+    .card h2 {
+        margin: 0 0 0.6rem 0;
+        font-size: 1.1rem;
+    }
+
+    .card p {
+        font-size: 0.8rem;
+        margin: 0.4rem 0;
+    }
+
+    /* Leaderboard hint - smaller on mobile */
+    #leaderboardHint {
+        font-size: 0.75rem;
+    }
+
+    #questionCount,
+    #userCount {
+        font-size: 0.75rem;
+    }
+}
+
+/* Override inline flex styles for better mobile layout */
+@media (max-width: 600px) {
+    .controls-row[style*="flex"] {
+        flex-direction: column !important;
+        align-items: stretch !important;
+    }
+
+    .controls-row[style*="flex"] .btn {
+        width: 100% !important;
+    }
+
+    /* Ensure all label fields stack */
+    label[style*="flex:1"] {
+        width: 100% !important;
+        flex: none !important;
+    }
+}
+
+/* Enhanced Question Bank and User Management responsiveness */
+@media (max-width: 768px) {
+    /* Hide less important columns on mobile for these tables */
+    .participants-table tbody tr {
+        position: relative;
+    }
+
+    /* Better table display for mobile */
+    .table-wrapper {
+        border-radius: 8px;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    }
+
+    .participants-table {
+        font-size: 0.85rem;
+    }
+
+    .participants-table thead {
+        position: sticky;
+        top: 0;
+        background: var(--card);
+        z-index: 10;
+    }
+
+    .participants-table th {
+        font-weight: 700;
+        padding: 0.6rem;
+        white-space: nowrap;
+    }
+
+    .participants-table td {
+        padding: 0.6rem;
+        word-break: break-word;
+    }
+
+    /* Action buttons in table */
+    .action-btn {
+        padding: 0.4rem 0.6rem;
+        font-size: 0.8rem;
+        min-width: 50px;
+        border-radius: 4px;
+    }
+
+    /* Admin grid - make form fields responsive */
+    .admin-grid {
+        gap: 0.8rem;
+    }
+
+    .field {
+        width: 100%;
+    }
+
+    .field textarea {
+        min-height: 100px;
+        resize: vertical;
+    }
+
+    .field-row {
+        flex-direction: column;
+        gap: 0.6rem;
+    }
+
+    .option-actions {
+        display: flex;
+        gap: 0.4rem;
+        width: 100%;
+    }
+
+    .option-actions button {
+        flex: 1;
+        padding: 0.5rem;
+        font-size: 0.85rem;
+    }
+
+    /* Options container */
+    .options-container {
+        display: flex;
+        flex-direction: column;
+        gap: 0.6rem;
+        max-height: 200px;
+        overflow-y: auto;
+        border: 1px solid rgba(255, 255, 255, 0.03);
+        padding: 0.6rem;
+        border-radius: 6px;
+    }
+
+    [data-theme="light"] .options-container {
+        border: 1px solid #cbd5e1;
+        background: #f8fafc;
+    }
+
+    .option-row {
+        display: flex;
+        gap: 0.4rem;
+        align-items: center;
+        padding: 0.4rem;
+        background: rgba(255, 255, 255, 0.02);
+        border-radius: 4px;
+    }
+
+    [data-theme="light"] .option-row {
+        background: #ffffff;
+        border: 1px solid #e2e8f0;
+    }
+
+    .option-row input[type="radio"],
+    .option-row input[type="checkbox"] {
+        flex-shrink: 0;
+    }
+
+    .option-row input[type="text"] {
+        flex: 1;
+        min-width: 100px;
+        padding: 0.4rem;
+        font-size: 0.9rem;
+    }
+
+    /* Import/Export section */
+    #importFile {
+        display: block;
+        width: 100%;
+        margin-bottom: 0.6rem;
+        padding: 0.6rem;
+        border: 1px solid rgba(255, 255, 255, 0.03);
+        border-radius: 6px;
+        cursor: pointer;
+    }
+
+    [data-theme="light"] #importFile {
+        border: 1px solid #cbd5e1;
+        background: #f8fafc;
+    }
+
+    /* Controls row - make responsive */
+    .controls-row {
+        flex-wrap: wrap;
+        gap: 0.6rem;
+    }
+
+    .controls-row .btn {
+        flex: 1;
+        min-width: 120px;
+    }
+
+    /* Quiz settings fields alignment */
+    [style*="flex:1"] {
+        width: 100%;
+    }
+}
+
+/* Extra small screens - further optimize tables */
+@media (max-width: 480px) {
+    .participants-table {
+        font-size: 0.75rem;
+    }
+
+    .participants-table th,
+    .participants-table td {
+        padding: 0.4rem;
+    }
+
+    .action-btn {
+        padding: 0.3rem 0.5rem;
+        font-size: 0.75rem;
+        min-width: 40px;
+    }
+
+    .option-row {
+        padding: 0.3rem;
+        gap: 0.3rem;
+    }
+
+    .option-row input[type="text"] {
+        min-width: 80px;
+    }
+
+    .options-container {
+        max-height: 150px;
+        padding: 0.4rem;
+    }
+
+    .option-actions button {
+        padding: 0.4rem;
+        font-size: 0.8rem;
+    }
+
+    #importFile {
+        padding: 0.4rem;
+        font-size: 0.85rem;
+    }
+
+    /* Ensure question editor is compact */
+    #qText {
+        min-height: 70px;
+    }
+
+    .field-row {
+        gap: 0.5rem;
+    }
 }

@@ -131,7 +131,8 @@ function updateAnswerChoices() {
     optionEls.forEach((opt, idx) => {
         const o = document.createElement('option');
         o.value = idx;
-        o.textContent = opt.value.trim() || `Option ${idx + 1}`;
+        const text = opt.value.trim() || `Option ${idx + 1}`;
+        o.textContent = text.substring(0, 40); // Truncate long options for mobile display
         select.appendChild(o);
     });
     if (optionEls.length > 0) {
@@ -189,8 +190,8 @@ function renderTable() {
                 <td>${q.text}</td>
                 <td>${answerText}</td>
                 <td>
-                    <button class="btn" data-action="edit" data-id="${q.id}">Edit</button>
-                    <button class="btn" data-action="delete" data-id="${q.id}">Delete</button>
+                    <button class="btn action-btn" data-action="edit" data-id="${q.id}">Edit</button>
+                    <button class="btn action-btn" data-action="delete" data-id="${q.id}">Delete</button>
                 </td>
             `;
             tbody.appendChild(tr);
@@ -237,7 +238,7 @@ function renderUsers() {
             const lastDate = attempts ? new Date(userAttempts[userAttempts.length - 1].date) : null;
             const lastStr = lastDate ? lastDate.toLocaleString() : 'Never';
             const roleLabel = u.role === 'admin' ? 'Admin' : 'User';
-            const actionLabel = u.role === 'admin' ? 'Demote to User' : 'Promote to Admin';
+            const actionLabel = u.role === 'admin' ? 'Demote' : 'Promote';
             const tr = document.createElement('tr');
             tr.innerHTML = `
                 <td>${idx + 1}</td>
@@ -247,9 +248,9 @@ function renderUsers() {
                 <td>${attempts}</td>
                 <td>${lastStr}</td>
                 <td>
-                    <button class="btn" data-action="role" data-username="${u.username}">${actionLabel}</button>
-                    <button class="btn" data-action="reset" data-username="${u.username}">Reset Password</button>
-                    <button class="btn" data-action="delete" data-username="${u.username}">Delete</button>
+                    <button class="btn action-btn" data-action="role" data-username="${u.username}" title="${actionLabel}">${actionLabel}</button>
+                    <button class="btn action-btn" data-action="reset" data-username="${u.username}" title="Reset Password">Reset</button>
+                    <button class="btn action-btn" data-action="delete" data-username="${u.username}" title="Delete User">Delete</button>
                 </td>
             `;
             tbody.appendChild(tr);
