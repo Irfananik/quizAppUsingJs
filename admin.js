@@ -491,6 +491,9 @@ document.addEventListener('DOMContentLoaded', () => {
     const user = requireAdmin();
     if (!user) return;
 
+    // Initialize theme
+    initTheme();
+
     // header info
     const userLabel = document.getElementById('userLabel');
     if (userLabel) userLabel.textContent = `${user.name || user.username} [Admin]`;
@@ -545,7 +548,34 @@ document.addEventListener('DOMContentLoaded', () => {
     document.getElementById('exportBtn').addEventListener('click', exportQuestions);
     document.getElementById('resetToDefaults').addEventListener('click', restoreDefaults);
 
+    // Theme toggle
+    const themeToggle = document.getElementById('themeToggle');
+    if (themeToggle) themeToggle.addEventListener('click', toggleTheme);
+
     document.getElementById('backToQuiz').addEventListener('click', () => { window.location.href = 'index.html'; });
     document.getElementById('dashboardLink').addEventListener('click', () => { window.location.href = 'dashboard.html'; });
     document.getElementById('logoutBtn').addEventListener('click', () => { localStorage.removeItem('currentUser'); window.location.href = 'auth.html'; });
 });
+
+// Theme management
+function initTheme() {
+    const savedTheme = localStorage.getItem('theme') || 'dark';
+    document.documentElement.setAttribute('data-theme', savedTheme);
+    updateThemeIcon(savedTheme);
+}
+
+function toggleTheme() {
+    const currentTheme = document.documentElement.getAttribute('data-theme') || 'dark';
+    const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
+    document.documentElement.setAttribute('data-theme', newTheme);
+    localStorage.setItem('theme', newTheme);
+    updateThemeIcon(newTheme);
+}
+
+function updateThemeIcon(theme) {
+    const themeToggle = document.getElementById('themeToggle');
+    if (themeToggle) {
+        themeToggle.textContent = theme === 'dark' ? '☀️' : '🌙';
+        themeToggle.title = theme === 'dark' ? 'Switch to light mode' : 'Switch to dark mode';
+    }
+}

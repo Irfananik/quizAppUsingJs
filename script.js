@@ -197,6 +197,9 @@ function init() {
         return;
     }
 
+    // Initialize theme
+    initTheme();
+
     refreshQuestionBank();
     scoreEl.textContent = `Score: ${score}`;
     timerEl.textContent = quizSettings.enableTimer ? `--:--` : 'Timer off';
@@ -235,6 +238,10 @@ function attachEvents() {
     if (adminBtn) adminBtn.addEventListener('click', () => { window.location.href = 'admin.html'; });
     if (myDashboardStartBtn) myDashboardStartBtn.addEventListener('click', () => { window.location.href = 'dashboard.html'; });
     if (logoutBtn) logoutBtn.addEventListener('click', () => { localStorage.removeItem('currentUser'); window.location.href = 'auth.html'; });
+
+    // Theme toggle
+    const themeToggle = document.getElementById('themeToggle');
+    if (themeToggle) themeToggle.addEventListener('click', toggleTheme);
 
     // change event when selecting an option
     choicesForm.addEventListener('change', (e) => {
@@ -494,6 +501,31 @@ function playBeep(correct = true) {
         o.start();
         setTimeout(() => { o.stop(); ctx.close(); }, 120);
     } catch (err) { /* ignore if audio not allowed */ }
+}
+
+// -------------------------
+// Theme Management
+// -------------------------
+function initTheme() {
+    const savedTheme = localStorage.getItem('theme') || 'dark';
+    document.documentElement.setAttribute('data-theme', savedTheme);
+    updateThemeIcon(savedTheme);
+}
+
+function toggleTheme() {
+    const currentTheme = document.documentElement.getAttribute('data-theme') || 'dark';
+    const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
+    document.documentElement.setAttribute('data-theme', newTheme);
+    localStorage.setItem('theme', newTheme);
+    updateThemeIcon(newTheme);
+}
+
+function updateThemeIcon(theme) {
+    const themeToggle = document.getElementById('themeToggle');
+    if (themeToggle) {
+        themeToggle.textContent = theme === 'dark' ? '☀️' : '🌙';
+        themeToggle.title = theme === 'dark' ? 'Switch to light mode' : 'Switch to dark mode';
+    }
 }
 
 // -------------------------

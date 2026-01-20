@@ -5,6 +5,21 @@
     --muted: #94a3b8;
     --danger: #ff6b6b;
     --glass: rgba(255, 255, 255, 0.03);
+    --text: #e6eef6;
+    --bg-gradient-start: #071021;
+    --bg-gradient-end: #0f1724;
+}
+
+[data-theme="light"] {
+    --bg: #f5f7fa;
+    --card: #ffffff;
+    --accent: #10b981;
+    --muted: #64748b;
+    --danger: #ef4444;
+    --glass: rgba(0, 0, 0, 0.03);
+    --text: #1e293b;
+    --bg-gradient-start: #e0e7ff;
+    --bg-gradient-end: #f5f7fa;
 }
 
 * {
@@ -19,8 +34,8 @@ body {
 body {
     margin: 0;
     font-family: Inter, Segoe UI, Roboto, Arial;
-    background: linear-gradient(180deg, #071021 0%, #0f1724 100%);
-    color: #e6eef6;
+    background: linear-gradient(180deg, var(--bg-gradient-start) 0%, var(--bg-gradient-end) 100%);
+    color: var(--text);
     min-height: 100vh;
     padding: 2rem;
     /* Use normal document flow so page elements are not all flex children */
@@ -62,6 +77,12 @@ body {
     color: inherit
 }
 
+[data-theme="light"] .meta input {
+    border: 1px solid #cbd5e1;
+    background: #ffffff;
+    color: #1e293b;
+}
+
 .status {
     display: flex;
     gap: 0.6rem;
@@ -78,10 +99,16 @@ body {
 }
 
 .card {
-    background: linear-gradient(180deg, rgba(255, 255, 255, 0.02), rgba(255, 255, 255, 0.01));
+    background: var(--card);
     padding: 1.2rem;
     border-radius: 12px;
-    box-shadow: 0 6px 18px rgba(2, 6, 23, 0.6)
+    box-shadow: 0 6px 18px rgba(2, 6, 23, 0.3);
+    border: 1px solid var(--glass);
+}
+
+[data-theme="light"] .card {
+    box-shadow: 0 4px 12px rgba(100, 116, 139, 0.1);
+    border: 1px solid #e2e8f0;
 }
 
 .hidden {
@@ -115,11 +142,11 @@ body {
     border-radius: 8px;
     cursor: pointer;
     transition: background 150ms;
-    border: 1px solid rgba(255, 255, 255, 0.02)
+    border: 1px solid var(--glass)
 }
 
 .choice:hover {
-    background: rgba(255, 255, 255, 0.02)
+    background: var(--glass)
 }
 
 .choice input {
@@ -139,7 +166,12 @@ body {
     cursor: pointer;
     background: transparent;
     color: var(--accent);
-    border: 1px solid rgba(110, 231, 183, 0.12)
+    border: 1px solid var(--glass);
+    transition: all 150ms;
+}
+
+.btn:hover {
+    background: var(--glass);
 }
 
 .btn.primary {
@@ -314,6 +346,12 @@ body {
     color: inherit
 }
 
+[data-theme="light"] .auth-form input {
+    border: 1px solid #cbd5e1;
+    background: #ffffff;
+    color: #1e293b;
+}
+
 .user-info {
     display: flex;
     gap: 0.6rem;
@@ -380,6 +418,11 @@ body {
     border: 1px solid rgba(255, 255, 255, 0.03)
 }
 
+[data-theme="light"] .stat-card {
+    background: #f8fafc;
+    border: 1px solid #e2e8f0;
+}
+
 .stat-value {
     font-size: 2rem;
     font-weight: 700;
@@ -401,6 +444,25 @@ body {
     color: var(--muted);
     font-size: 0.9rem;
     margin: 0.3rem 0
+}
+
+/* Theme toggle button */
+.theme-toggle {
+    background: var(--glass);
+    border: 1px solid var(--glass);
+    padding: 0.5rem 0.7rem;
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 1.2rem;
+    transition: all 150ms;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.theme-toggle:hover {
+    background: var(--accent);
+    transform: scale(1.05);
 }
 
 /* Admin panel */
@@ -428,6 +490,21 @@ body {
     border: 1px solid rgba(255, 255, 255, 0.06);
     background: rgba(255, 255, 255, 0.02);
     color: inherit;
+}
+
+[data-theme="light"] .field textarea,
+[data-theme="light"] .field input,
+[data-theme="light"] .field select {
+    border: 1px solid #cbd5e1;
+    background: #ffffff;
+    color: #1e293b;
+}
+
+[data-theme="light"] .field textarea:focus,
+[data-theme="light"] .field input:focus,
+[data-theme="light"] .field select:focus {
+    outline: 2px solid var(--accent);
+    border-color: var(--accent);
 }
 
 .field-row {
