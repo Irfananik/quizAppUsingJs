@@ -17,6 +17,17 @@ const MIN_OPTIONS = 2;
 const MAX_OPTIONS = 8;
 let editingId = null;
 
+// User management helpers
+function getUsers() {
+    return JSON.parse(localStorage.getItem('users') || '[]');
+}
+function saveUsers(list) {
+    localStorage.setItem('users', JSON.stringify(list));
+}
+function getParticipants() {
+    return JSON.parse(localStorage.getItem('participants') || '[]');
+}
+
 function getCurrentUser() {
     return JSON.parse(localStorage.getItem('currentUser') || 'null');
 }
@@ -163,6 +174,102 @@ function renderTable() {
     });
 }
 
+// -------------------------
+// User management
+// -------------------------
+function renderUsers() {
+    const tbody = document.getElementById('userBody');
+    const countEl = document.getElementById('userCount');
+    const users = getUsers();
+    const activity = getParticipants();
+
+    tbody.innerHTML = '';
+    if (!users.length) {
+        tbody.innerHTML = '<tr><td colspan="7">No users found.</td></tr>';
+    } else {
+        users.forEach((u, idx) => {
+            const userAttempts = activity.filter(a => a.username === u.username);
+            const attempts = userAttempts.length;
+            const lastDate = attempts ? new Date(userAttempts[userAttempts.length - 1].date) : null;
+            const lastStr = lastDate ? lastDate.toLocaleString() : 'Never';
+            const roleLabel = u.role === 'admin' ? 'Admin' : 'User';
+            const actionLabel = u.role === 'admin' ? 'Demote to User' : 'Promote to Admin';
+            const tr = document.createElement('tr');
+            tr.innerHTML = `
+                <td>${idx + 1}</td>
+                <td>${u.name || '-'}</td>
+                <td>${u.username}</td>
+                <td>${roleLabel}</td>
+                <td>${attempts}</td>
+                <td>${lastStr}</td>
+                <td>
+                    <button class="btn" data-action="role" data-username="${u.username}">${actionLabel}</button>
+                    <button class="btn" data-action="reset" data-username="${u.username}">Reset Password</button>
+                    <button class="btn" data-action="delete" data-username="${u.username}">Delete</button>
+                </td>
+            `;
+            tbody.appendChild(tr);
+        });
+    }
+    countEl.textContent = `${users.length} user${users.length !== 1 ? 's' : ''}`;
+
+    tbody.querySelectorAll('button[data-action]').forEach(btn => {
+        btn.addEventListener('click', handleUserAction);
+    });
+}
+
+function handleUserAction(e) {
+    const action = e.currentTarget.getAttribute('data-action');
+    const username = e.currentTarget.getAttribute('data-username');
+    const currentAdmin = getCurrentUser();
+    if (!currentAdmin || currentAdmin.role !== 'admin') { alert('Admin only.'); return; }
+
+    if (username === currentAdmin.username && action === 'delete') {
+        alert('You cannot delete your own account while signed in.');
+        return;
+    }
+    if (username === currentAdmin.username && action === 'role') {
+        alert('You cannot change your own role while signed in.');
+        return;
+    }
+
+    if (action === 'role') {
+        const users = getUsers();
+        const u = users.find(x => x.username === username);
+        if (!u) return;
+        u.role = u.role === 'admin' ? 'user' : 'admin';
+        saveUsers(users);
+        // If we promoted/demoted someone else, refresh
+        renderUsers();
+        alert(`Role updated: ${u.username} is now ${u.role}.`);
+        return;
+    }
+
+    if (action === 'reset') {
+        const users = getUsers();
+        const u = users.find(x => x.username === username);
+        if (!u) return;
+        const pwd = prompt('Enter a new password for this user:');
+        if (!pwd) { alert('Password not changed.'); return; }
+        u.password = pwd;
+        saveUsers(users);
+        alert('Password reset.');
+        return;
+    }
+
+    if (action === 'delete') {
+        if (!confirm('Delete this user and their quiz history?')) return;
+        const users = getUsers().filter(u => u.username !== username);
+        saveUsers(users);
+        // Remove their activity
+        const activity = getParticipants().filter(p => p.username !== username);
+        localStorage.setItem('participants', JSON.stringify(activity));
+        renderUsers();
+        alert('User deleted.');
+        return;
+    }
+}
+
 function saveCurrentQuestion() {
     const text = document.getElementById('qText').value.trim();
     const category = document.getElementById('qCategory').value.trim() || 'General';
@@ -250,6 +357,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     renderOptions();
     renderTable();
+    renderUsers();
 
     document.getElementById('qAnswer').addEventListener('change', (e) => {
         e.target.setAttribute('data-current', e.target.value);
