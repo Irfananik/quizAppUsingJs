@@ -167,6 +167,7 @@ const restartQuizBtn = document.getElementById('restartQuizBtn');
 const dashboardBtn = document.getElementById('dashboardBtn');
 const viewParticipantsBtn = document.getElementById('viewParticipantsBtn');
 const adminBtn = document.getElementById('adminBtn');
+const myDashboardStartBtn = document.getElementById('myDashboardStartBtn');
 const logoutBtn = document.getElementById('logoutBtn');
 const userInfo = document.getElementById('userInfo');
 const userLabel = document.getElementById('userLabel');
@@ -232,6 +233,7 @@ function attachEvents() {
     if (viewParticipantsBtn) viewParticipantsBtn.addEventListener('click', () => { window.location.href = isAdmin() ? 'participants.html' : 'dashboard.html'; });
     if (dashboardBtn) dashboardBtn.addEventListener('click', () => { window.location.href = 'dashboard.html'; });
     if (adminBtn) adminBtn.addEventListener('click', () => { window.location.href = 'admin.html'; });
+    if (myDashboardStartBtn) myDashboardStartBtn.addEventListener('click', () => { window.location.href = 'dashboard.html'; });
     if (logoutBtn) logoutBtn.addEventListener('click', () => { localStorage.removeItem('currentUser'); window.location.href = 'auth.html'; });
 
     // change event when selecting an option
