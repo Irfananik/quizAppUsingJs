@@ -24,6 +24,90 @@
 
         <main class="main">
             <section class="card">
+                <h2>Analytics & Reports</h2>
+                <div class="stats-grid">
+                    <div class="stat-card">
+                        <div class="stat-value" id="statTotalUsers">0</div>
+                        <div class="stat-label">Total Users</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-value" id="statTotalAttempts">0</div>
+                        <div class="stat-label">Total Attempts</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-value" id="statAvgScore">0%</div>
+                        <div class="stat-label">Average Score</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-value" id="statPassRate">0%</div>
+                        <div class="stat-label">Pass Rate</div>
+                    </div>
+                </div>
+                <div class="controls-row" style="margin-top:0.6rem; justify-content: flex-start; gap:0.6rem;">
+                    <button id="exportAttemptsCsv" class="btn">Export Attempts CSV</button>
+                    <span class="muted">Pass rate uses current passing score setting.</span>
+                </div>
+            </section>
+
+            <section class="card">
+                <div class="controls-row" style="justify-content: space-between; align-items: center;">
+                    <h2 style="margin:0;">Top Performers</h2>
+                    <span class="muted" id="leaderboardHint">Top 10 by best score</span>
+                </div>
+                <div class="table-wrapper">
+                    <table class="participants-table">
+                        <thead>
+                            <tr>
+                                <th>#</th>
+                                <th>Name</th>
+                                <th>Username</th>
+                                <th>Best %</th>
+                                <th>Attempts</th>
+                                <th>Last Attempt</th>
+                            </tr>
+                        </thead>
+                        <tbody id="leaderboardBody"></tbody>
+                    </table>
+                </div>
+            </section>
+
+            <section class="card">
+                <h2>Quiz Settings</h2>
+                <div class="admin-grid">
+            <section class="card">
+                <h2>Quiz Settings</h2>
+                <div class="admin-grid">
+                    <div class="field-row" style="gap:0.6rem; align-items:center;">
+                        <label class="field" style="flex:1;">
+                            <span>Enable Timer</span>
+                            <input type="checkbox" id="settingEnableTimer" />
+                        </label>
+                        <label class="field" style="flex:1;">
+                            <span>Time Limit (seconds)</span>
+                            <input type="number" id="settingTimeLimit" min="5" step="5" placeholder="30" />
+                        </label>
+                    </div>
+                    <label class="field">
+                        <span>Question Count (0 = all)</span>
+                        <input type="number" id="settingQuestionCount" min="0" step="1" placeholder="0" />
+                    </label>
+                    <label class="field">
+                        <span>Passing Score (%)</span>
+                        <input type="number" id="settingPassingScore" min="0" max="100" step="1" placeholder="70" />
+                    </label>
+                    <label class="field">
+                        <span>Shuffle Questions</span>
+                        <input type="checkbox" id="settingShuffle" />
+                    </label>
+                    <div class="field actions-row">
+                        <button id="saveSettings" class="btn primary">Save Settings</button>
+                        <button id="resetSettings" class="btn">Restore Default Settings</button>
+                        <span class="muted">Applied immediately for new quiz runs.</span>
+                    </div>
+                </div>
+            </section>
+
+            <section class="card">
                 <h2>Question Editor</h2>
                 <div class="admin-grid">
                     <label class="field">

@@ -94,6 +94,21 @@ function loadQuestionBank() {
     return defaultQuestions;
 }
 
+// Quiz settings defaults
+const defaultQuizSettings = {
+    timeLimit: 30, // seconds per question
+    enableTimer: true,
+    questionCount: 0, // 0 = all
+    passingScore: 70, // percent
+    shuffle: true
+};
+
+function loadQuizSettings() {
+    const stored = JSON.parse(localStorage.getItem('quizSettings') || 'null');
+    return Object.assign({}, defaultQuizSettings, stored || {});
+}
+
+let quizSettings = loadQuizSettings();
 let questions = loadQuestionBank();
 
 // -------------------------
@@ -106,10 +121,38 @@ let timeLeft = 20; // seconds per question
 let playerName = '';
 let answered = false;
 
+function shuffleArray(arr) {
+    const a = arr.slice();
+    for (let i = a.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [a[i], a[j]] = [a[j], a[i]];
+    }
+    return a;
+}
+
+function plannedQuestionCount(bank, settings) {
+    const count = Number(settings.questionCount);
+    if (Number.isFinite(count) && count > 0) return Math.min(count, bank.length);
+    return bank.length;
+}
+
 function refreshQuestionBank() {
     questions = loadQuestionBank();
-    if (totalQEl) totalQEl.textContent = questions.length;
-    if (startBtn) startBtn.disabled = questions.length === 0;
+    quizSettings = loadQuizSettings();
+    const planned = plannedQuestionCount(questions, quizSettings);
+    if (totalQEl) totalQEl.textContent = planned;
+    if (startBtn) startBtn.disabled = planned === 0;
+    if (!quizSettings.enableTimer && timerEl) timerEl.textContent = 'Timer off';
+}
+
+function buildQuestionSet() {
+    const bank = loadQuestionBank();
+    quizSettings = loadQuizSettings();
+    let list = bank.slice();
+    if (quizSettings.shuffle) list = shuffleArray(list);
+    const count = Number(quizSettings.questionCount);
+    if (Number.isFinite(count) && count > 0) list = list.slice(0, Math.min(count, list.length));
+    return list;
 }
 
 // -------------------------
@@ -155,7 +198,7 @@ function init() {
 
     refreshQuestionBank();
     scoreEl.textContent = `Score: ${score}`;
-    timerEl.textContent = `--:--`;
+    timerEl.textContent = quizSettings.enableTimer ? `--:--` : 'Timer off';
 
     // Show/hide features based on role
     if (!isAdmin()) {
@@ -208,11 +251,13 @@ function attachEvents() {
 // Start quiz
 // -------------------------
 function startQuiz() {
-    refreshQuestionBank();
+    questions = buildQuestionSet();
     if (!questions.length) {
         alert('No questions available. Admin needs to add questions first.');
         return;
     }
+    if (totalQEl) totalQEl.textContent = questions.length;
+
     currentIndex = 0; score = 0; answered = false;
     startScreen.classList.add('hidden');
     endScreen.classList.add('hidden');
@@ -334,17 +379,24 @@ function finishQuiz() {
     const currentUser = JSON.parse(localStorage.getItem('currentUser') || 'null');
     const displayName = currentUser ? (currentUser.name || currentUser.username) : ((playerInput && playerInput.value.trim()) || (playerName ? playerName : 'Anonymous'));
     saveParticipant(score);
-    finalMessage.innerHTML = `Nice work, ${displayName}!`;
-    finalScore.innerHTML = `Final score: ${score} / ${questions.length}`;
+    const percent = Math.round((score / questions.length) * 100);
+    const passed = percent >= (quizSettings.passingScore || 0);
+    finalMessage.innerHTML = passed ? `Great job, ${displayName}! You passed.` : `Keep going, ${displayName}! You can improve.`;
+    finalScore.innerHTML = `Final score: ${score} / ${questions.length} (${percent}%) • Passing: ${quizSettings.passingScore}%`;
 }
 
 // -------------------------
 // Timer functions
 // -------------------------
 function startTimer() {
-    timeLeft = 20; // reset per question
-    timerEl.textContent = formatTime(timeLeft);
     clearInterval(timerInterval);
+    if (!quizSettings.enableTimer) {
+        if (timerEl) timerEl.textContent = 'Timer off';
+        return;
+    }
+
+    timeLeft = Number(quizSettings.timeLimit) || 30; // reset per question
+    timerEl.textContent = formatTime(timeLeft);
     timerInterval = setInterval(() => {
         timeLeft -= 1;
         timerEl.textContent = formatTime(timeLeft);
@@ -420,7 +472,7 @@ function resetQuiz() {
     quizScreen.classList.add('hidden');
     endScreen.classList.add('hidden');
     scoreEl.textContent = `Score: ${score}`;
-    timerEl.textContent = `--:--`;
+    timerEl.textContent = quizSettings.enableTimer ? `--:--` : 'Timer off';
     choicesForm.innerHTML = '';
     feedbackEl.innerHTML = '';
 }

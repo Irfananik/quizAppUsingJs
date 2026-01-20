@@ -13,6 +13,14 @@ const defaultQuestions = [
     { id: 10, text: "Which method converts a JSON string to a JavaScript object?", choices: ["JSON.stringify()", "JSON.parse()", "JSON.toObject()", "JSON.from()"], answer: 1, category: "JavaScript" }
 ];
 
+const defaultQuizSettings = {
+    timeLimit: 30,
+    enableTimer: true,
+    questionCount: 0,
+    passingScore: 70,
+    shuffle: true
+};
+
 const MIN_OPTIONS = 2;
 const MAX_OPTIONS = 8;
 let editingId = null;
@@ -40,6 +48,14 @@ function getQuestionBank() {
 
 function saveQuestionBank(list) {
     localStorage.setItem('questionBank', JSON.stringify(list));
+}
+
+function getQuizSettings() {
+    const stored = JSON.parse(localStorage.getItem('quizSettings') || 'null');
+    return Object.assign({}, defaultQuizSettings, stored || {});
+}
+function saveQuizSettings(settings) {
+    localStorage.setItem('quizSettings', JSON.stringify(settings));
 }
 
 function requireAdmin() {
@@ -78,6 +94,34 @@ function renderOptions(values = ['','','','']) {
     container.innerHTML = '';
     values.forEach((val, idx) => container.appendChild(buildOptionRow(idx, val)));
     updateAnswerChoices();
+}
+
+// -------------------------
+// Quiz settings
+// -------------------------
+function loadSettingsForm() {
+    const s = getQuizSettings();
+    document.getElementById('settingEnableTimer').checked = !!s.enableTimer;
+    document.getElementById('settingTimeLimit').value = Number(s.timeLimit) || 30;
+    document.getElementById('settingQuestionCount').value = Number(s.questionCount) || 0;
+    document.getElementById('settingPassingScore').value = Number(s.passingScore) || 70;
+    document.getElementById('settingShuffle').checked = !!s.shuffle;
+}
+
+function saveSettingsFromForm() {
+    const enableTimer = document.getElementById('settingEnableTimer').checked;
+    let timeLimit = Number(document.getElementById('settingTimeLimit').value || 30);
+    let questionCount = Number(document.getElementById('settingQuestionCount').value || 0);
+    let passingScore = Number(document.getElementById('settingPassingScore').value || 70);
+    const shuffle = document.getElementById('settingShuffle').checked;
+
+    if (isNaN(timeLimit) || timeLimit < 5) timeLimit = 5;
+    if (isNaN(questionCount) || questionCount < 0) questionCount = 0;
+    if (isNaN(passingScore) || passingScore < 0) passingScore = 0;
+    if (passingScore > 100) passingScore = 100;
+
+    saveQuizSettings({ enableTimer, timeLimit, questionCount, passingScore, shuffle });
+    alert('Quiz settings saved. They will apply to the next quiz start.');
 }
 
 function updateAnswerChoices() {
@@ -216,6 +260,102 @@ function renderUsers() {
     tbody.querySelectorAll('button[data-action]').forEach(btn => {
         btn.addEventListener('click', handleUserAction);
     });
+}
+
+// -------------------------
+// Analytics & Reports
+// -------------------------
+function computeAttemptPercents(activity) {
+    return activity.map(a => {
+        const totalQ = Number(a.totalQuestions) || 10;
+        const percent = Math.round((a.score / totalQ) * 100);
+        return Object.assign({}, a, { percent, totalQ });
+    });
+}
+
+function renderStats() {
+    const users = getUsers();
+    const activity = computeAttemptPercents(getParticipants());
+    const settings = getQuizSettings();
+
+    const totalUsers = users.length;
+    const totalAttempts = activity.length;
+    let avg = 0;
+    let passRate = 0;
+
+    if (activity.length) {
+        const sum = activity.reduce((acc, a) => acc + a.percent, 0);
+        avg = Math.round(sum / activity.length);
+        const passes = activity.filter(a => a.percent >= (settings.passingScore || 0)).length;
+        passRate = Math.round((passes / activity.length) * 100);
+    }
+
+    document.getElementById('statTotalUsers').textContent = totalUsers;
+    document.getElementById('statTotalAttempts').textContent = totalAttempts;
+    document.getElementById('statAvgScore').textContent = `${avg}%`;
+    document.getElementById('statPassRate').textContent = `${passRate}%`;
+}
+
+function renderLeaderboard() {
+    const tbody = document.getElementById('leaderboardBody');
+    const activity = computeAttemptPercents(getParticipants());
+
+    // Aggregate by user best percent
+    const byUser = {};
+    activity.forEach(a => {
+        if (!byUser[a.username || a.name]) {
+            byUser[a.username || a.name] = { name: a.name, username: a.username || '-', best: a.percent, attempts: 0, last: a.date };
+        }
+        const ref = byUser[a.username || a.name];
+        ref.attempts += 1;
+        if (a.percent > ref.best) ref.best = a.percent;
+        if (!ref.last || new Date(a.date) > new Date(ref.last)) ref.last = a.date;
+    });
+
+    const rows = Object.values(byUser)
+        .sort((a, b) => (b.best - a.best) || (b.attempts - a.attempts))
+        .slice(0, 10);
+
+    tbody.innerHTML = '';
+    if (!rows.length) {
+        tbody.innerHTML = '<tr><td colspan="6">No attempts yet.</td></tr>';
+        return;
+    }
+
+    rows.forEach((r, idx) => {
+        const tr = document.createElement('tr');
+        tr.innerHTML = `
+            <td>${idx + 1}</td>
+            <td>${r.name || '-'}</td>
+            <td>${r.username || '-'}</td>
+            <td>${r.best}%</td>
+            <td>${r.attempts}</td>
+            <td>${r.last ? new Date(r.last).toLocaleString() : '—'}</td>
+        `;
+        tbody.appendChild(tr);
+    });
+}
+
+function exportAttemptsCsv() {
+    const activity = computeAttemptPercents(getParticipants());
+    if (!activity.length) { alert('No attempts to export.'); return; }
+    const header = ['name','username','score','totalQuestions','percent','date'];
+    const rows = activity.map(a => [
+        a.name || '',
+        a.username || '',
+        a.score,
+        a.totalQ,
+        a.percent,
+        a.date
+    ]);
+    const csv = [header.join(','), ...rows.map(r => r.map(v => `"${String(v).replace(/"/g,'""')}"`).join(','))].join('\n');
+    const blob = new Blob([csv], { type: 'text/csv' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = 'quiz-attempts.csv';
+    a.click();
+    URL.revokeObjectURL(url);
 }
 
 function handleUserAction(e) {
@@ -358,6 +498,10 @@ document.addEventListener('DOMContentLoaded', () => {
     renderOptions();
     renderTable();
     renderUsers();
+    loadSettingsForm();
+    renderStats();
+    renderLeaderboard();
+    renderUsers();
 
     document.getElementById('qAnswer').addEventListener('change', (e) => {
         e.target.setAttribute('data-current', e.target.value);
@@ -381,6 +525,15 @@ document.addEventListener('DOMContentLoaded', () => {
 
     document.getElementById('saveQuestion').addEventListener('click', saveCurrentQuestion);
     document.getElementById('cancelEdit').addEventListener('click', resetForm);
+
+    document.getElementById('saveSettings').addEventListener('click', saveSettingsFromForm);
+    document.getElementById('resetSettings').addEventListener('click', () => {
+        saveQuizSettings(defaultQuizSettings);
+        loadSettingsForm();
+        alert('Quiz settings restored to defaults.');
+    });
+
+    document.getElementById('exportAttemptsCsv').addEventListener('click', exportAttemptsCsv);
 
     document.getElementById('importBtn').addEventListener('click', () => {
         const fileInput = document.getElementById('importFile');
